@@ -8,6 +8,8 @@ export default function Recipe() {
   const {id} = useParams()
   const [r,setr]=useState({})
   const [issaved , setissaved] = useState(false)
+    const [loading, setLoading] = useState(true);
+  const [done, setDone] = useState(0)
 
   const allrecipes = useSelector((r)=>r.recipes)
   useEffect(()=>{
@@ -27,7 +29,17 @@ export default function Recipe() {
     axios.get(`https://dummyjson.com/recipes/${Number(id)}`)
     .then(res=>setr(res.data))
     .catch(err=>console.log("Error get data " + err))
+    .finally(() => setDone(p => p + 1))
+
   },[id])
+
+  useEffect(()=>{
+  if (done === 1) {
+    setLoading(false)
+  }
+},[done])
+
+
 
   const [checked, setChecked] = useState({});
   function toggle(i){
@@ -63,7 +75,18 @@ function Save() {
   setissaved(true)
 }
 
-
+if (loading) {
+  return (
+    <div style={{
+      minHeight: "70vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }}>
+      <div className="spinner"></div>
+    </div>
+  )
+}
 
 
   return (

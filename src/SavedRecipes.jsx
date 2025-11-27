@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { supprimer } from "./actions";
+import { Link } from "react-router-dom";
 
 export default function SavedRecipes() {
   const saved = useSelector(state => state.recipes);
@@ -32,7 +33,7 @@ export default function SavedRecipes() {
               </p>
 
               <div className="saved-actions">
-                <a className="saved-link" href={`/recipe/${r.id}`}>Open</a>
+                <Link className="saved-link" to={`/recipe/${r.id}`}>Open</Link>
                 <button
                   className="saved-delete"
                   type="button"

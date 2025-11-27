@@ -6,6 +6,8 @@ export default function Categories() {
   const [categories, setCategories] = useState([])
   const [filtered, setFiltered] = useState([])
   const [search, setSearch] = useState("")
+  const [loading, setLoading] = useState(true);
+  const [done, setDone] = useState(0)
 
   useEffect(() => {
     fetch("https://dummyjson.com/recipes/tags")
@@ -15,6 +17,7 @@ export default function Categories() {
         setFiltered(data) 
       })
       .catch(err => console.log(err))
+      .finally(() => setDone(p => p + 1))
   }, [])
   const navigate = useNavigate() 
 
@@ -24,6 +27,12 @@ export default function Categories() {
     if (!q) setFiltered(categories) 
     else setFiltered(categories.filter(c => c.toLowerCase().includes(q))) 
   }, [search, categories]) 
+
+  useEffect(()=>{
+  if (done === 1) {
+    setLoading(false)
+  }
+},[done])
 
 
 
@@ -38,6 +47,20 @@ export default function Categories() {
 
     return <OtherIcon /> 
   }
+
+
+  if (loading) {
+  return (
+    <div style={{
+      minHeight: "70vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }}>
+      <div className="spinner"></div>
+    </div>
+  )
+}
 
   return (
     <main className="categories-page">

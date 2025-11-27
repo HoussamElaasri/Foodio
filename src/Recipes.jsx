@@ -7,6 +7,8 @@ import { Link , useLocation } from "react-router-dom"
 export default function Recipes() {
   const [recipes, setRecipes] = useState([])
   const location = useLocation();
+    const [loading, setLoading] = useState(true);
+  const [done, setDone] = useState(0)
 
   const [q, setQ] = useState(() => 
     {
@@ -36,10 +38,17 @@ export default function Recipes() {
         setCuisine("all")
       })
       .catch(e=>console.log(e.message))
+      .finally(() => setDone(p => p + 1))
+
 
       
   }, [q])
 
+useEffect(()=>{
+  if (done === 1) {
+    setLoading(false)
+  }
+},[done])
  
 
  
@@ -54,6 +63,20 @@ export default function Recipes() {
     if (cuisine === "all") return true
     return r.cuisine === cuisine
   })
+
+
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: "70vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
+        <div className="spinner"></div>
+      </div>
+    )
+  }
 
   return (
     <main className="recipes-page" >

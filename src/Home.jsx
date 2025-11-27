@@ -7,30 +7,43 @@ export default function Home() {
   const [firstr,setfirstr]=useState({})
   const [secondr,setsecondr]=useState({})
   const [thirtr,setthirtr]=useState({})
-  useEffect(()=>{
-    var mainrecipeid = Math.floor(Math.random() * 40)+1
-    var firstrid = Math.floor(Math.random() * 40)+1
-    var secondrid = Math.floor(Math.random() * 40)+1
-    var thirtrid = Math.floor(Math.random() * 40)+1
+  const [loading, setLoading] = useState(true);
+  const [done, setDone] = useState(0)
 
-    axios.get(`https://dummyjson.com/recipes/${mainrecipeid}`)
+
+  useEffect(() => {
+  var mainrecipeid = Math.floor(Math.random() * 40)+1
+  var firstrid = Math.floor(Math.random() * 40)+1
+  var secondrid = Math.floor(Math.random() * 40)+1
+  var thirtrid = Math.floor(Math.random() * 40)+1
+
+  axios.get(`https://dummyjson.com/recipes/${mainrecipeid}`)
     .then(res=>setmainrecipe(res.data))
     .catch(err=>console.log("Error :" + err))
+    .finally(() => setDone(p => p + 1))  // 🔥 NEW
 
-    axios.get(`https://dummyjson.com/recipes/${firstrid}`)
+  axios.get(`https://dummyjson.com/recipes/${firstrid}`)
     .then(res=>setfirstr(res.data))
     .catch(err=>console.log("Error :" + err))
+    .finally(() => setDone(p => p + 1));  // 🔥 NEW
 
-    axios.get(`https://dummyjson.com/recipes/${secondrid}`)
+  axios.get(`https://dummyjson.com/recipes/${secondrid}`)
     .then(res=>setsecondr(res.data))
     .catch(err=>console.log("Error :" + err))
+    .finally(() => setDone(p => p + 1));  // 🔥 NEW
 
-    axios.get(`https://dummyjson.com/recipes/${thirtrid}`)
+  axios.get(`https://dummyjson.com/recipes/${thirtrid}`)
     .then(res=>setthirtr(res.data))
     .catch(err=>console.log("Error :" + err))
+    .finally(() => setDone(p => p + 1));  // 🔥 NEW
 
+}, []);
 
-  },[])
+useEffect(()=>{
+  if (done === 4) {
+    setLoading(false)
+  }
+},[done])
     
 
 
@@ -67,9 +80,23 @@ export default function Home() {
     
   ];
   const navigate = useNavigate();
+  if (loading) {
+  return (
+    <div style={{
+      minHeight: "70vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }}>
+      <div className="spinner"></div>
+    </div>
+  );
+}
+
 
 
   return (
+    
     <main className="home-page">
       <div className="home-search">
         <input type="text" placeholder="Looking for something delicious ?" />
